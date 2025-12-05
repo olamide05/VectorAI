@@ -24,15 +24,13 @@ def upload_file():
         return format_error(f'File type not allowed.', 400)
 
     # Note: We rely on Flask's MAX_CONTENT_LENGTH for size limit logic.
-    # Manually seeking() here is dangerous for large files in certain WSGI setups.
-
     s3 = get_s3_client()
     try:
         s3_key = generate_s3_key(file.filename)
         content_type = file.content_type or 'application/octet-stream'
         original_name = secure_filename(file.filename)
 
-        # Upload with Metadata (so we know the original filename later)
+        # Upload with Metadata
         s3.upload_fileobj(
             Fileobj=file,
             Bucket=BUCKET_NAME,
@@ -50,21 +48,35 @@ def upload_file():
             ExpiresIn=Config.PRESIGNED_EXPIRES
         )
 
-        # Optional: Rekognition (Best effort: capture error but don't fail upload)
+        # Initialize AI results
         image_labels = []
+        detected_text = []
+
+        # Run Rekognition (Best effort: capture error but don't fail upload)
         if content_type.startswith('image/'):
             try:
                 rek = get_rekognition_client()
+
+                # 1. Detect Labels
                 rek_resp = rek.detect_labels(
                     Image={'S3Object': {'Bucket': BUCKET_NAME, 'Name': s3_key}},
                     MaxLabels=Config.REKOGNITION_MAX_LABELS,
                     MinConfidence=Config.REKOGNITION_MIN_CONFIDENCE
                 )
                 image_labels = [{'Name': l['Name'], 'Confidence': l['Confidence']} for l in rek_resp.get('Labels', [])]
+
+                # 2. Detect Text (OCR)
+                text_resp = rek.detect_text(
+                    Image={'S3Object': {'Bucket': BUCKET_NAME, 'Name': s3_key}}
+                )
+                # Filter for full lines of text only
+                detected_text = [t['DetectedText'] for t in text_resp['TextDetections'] if t['Type'] == 'LINE']
+
             except ClientError as e:
                 logger.warning(f"Rekognition failed for {s3_key}: {e}")
-            except Exception:
-                pass # Don't fail the upload just because AI failed
+            except Exception as e:
+                logger.warning(f"AI processing failed silently: {e}")
+                pass
 
         return jsonify({
             'message': 'Upload successful',
@@ -72,6 +84,7 @@ def upload_file():
             'key': s3_key,
             'filename': original_name,
             'labels': image_labels,
+            'text': detected_text,
             'timestamp': datetime.utcnow().isoformat() + 'Z'
         }), 201
 
@@ -96,8 +109,6 @@ def list_files():
         files = []
         for page in page_iterator:
             for obj in page.get('Contents', []):
-                # PERFORMANCE FIX: Do NOT generate presigned URLs here.
-                # It is too slow for lists. Clients should ask for specific file details.
                 files.append({
                     'key': obj.get('Key'),
                     'size': obj.get('Size'),
@@ -111,9 +122,7 @@ def list_files():
 
 @api_bp.route('/files/<path:key>', methods=['GET'])
 def get_file_details(key):
-    """
-    Get details AND a download URL for a specific file.
-    """
+
     s3 = get_s3_client()
     try:
         # Check if exists
