@@ -1,254 +1,100 @@
 # VectorAI
 
-An AI-powered visual analysis tool for developers. Upload an image or file → VectorAI processes it through a secure multi-step pipeline (AWS S3 → Rekognition → Custom AI Pipelines) and returns high-quality structured insights.
-
 ## 🚀 Overview
 
-VectorAI is designed for **real-world developer workflows**, offering fast, secure, cloud-based analysis. The system uses **AWS S3** for safe file storage, **AWS Rekognition** for classification/OCR/moderation, and a modular **FastAPI/Flask backend** that can be deployed on Docker, EC2, or ECS.
+VectorAI is a machine learning project that explores how data can be compressed into meaningful representations using neural networks.
 
-## ✨ Features
-
-* 🔒 **Secure Upload Pipeline** (S3 + presigned URLs)
-* 🖼️ **Image Label Detection** (AWS Rekognition)
-* 🔡 **OCR / Text Extraction**
-* ⚠️ **Unsafe Content Detection**
-* 🧠 **Pluggable AI Pipelines** (Vision Transformers coming soon)
-* 📦 **Modular Backend Architecture**
-* 🐳 **Full Docker Support**
-* 🌐 **Next.js Frontend** optimized for developer tools
+The system uses an autoencoder to compress images into a low-dimensional vector (latent space) and reconstruct them. This demonstrates the connection between machine learning, representation learning, and data compression.
 
 ---
 
-# 🧱 Architecture
+## 🧠 Key Idea
 
-```
-Client (Next.js)
-      │
-      ▼
-FastAPI/Flask Backend
-  ├── /routes          → API endpoints
-  ├── /services        → AWS + core logic
-  └── /pipelines       → Multi-step AI processing (Rekognition + future ML)
-      │
-      ▼
-AWS S3  (secure storage via presigned URLs)
-      │
-      ▼
-AWS Rekognition (labels, OCR, moderation)
-```
+Instead of storing raw image data, VectorAI learns how to represent images as compact vectors while preserving important features.
+
+> Better compression = better understanding of the data
 
 ---
 
-# 📁 Project Structure
+## ⚙️ Features
 
-```
-vectorai-backend/
-│
-├── routes/
-│     ├── upload.py
-│     └── analyze.py
-│
-├── services/
-│     ├── s3_service.py
-│     └── rekognition_service.py
-│
-├── pipelines/
-│     └── vision_pipeline.py
-│
-├── core/
-│     ├── config.py   (environment variables)
-│     └── security.py
-│
-├── tests/
-│
-├── main.py
-└── requirements.txt
-```
+- Upload an image
+- Encode image into a latent vector
+- Reconstruct the image from the compressed representation
+- Compare original vs reconstructed output
+- Experiment with different compression levels
 
 ---
 
-# 🛠️ Tech Stack
+## 🧩 Concepts Covered
 
-### **Frontend**
-
-* Next.js + TypeScript
-* Axios (file upload requests)
-
-### **Backend**
-
-* FastAPI or Flask
-* Python 3.10+
-* boto3 (AWS SDK)
-
-### **Cloud**
-
-* AWS S3 (private bucket)
-* AWS Rekognition
-* IAM with restricted policies
-* Docker (containerized deployment)
+- Autoencoders
+- Latent space representations
+- Lossy compression
+- Reconstruction loss (MSE)
+- Neural networks
 
 ---
 
-# 🧪 Getting Started
+## 🏗️ How It Works
 
-## 1️⃣ Clone the Repository
-
-```bash
-git clone https://github.com/<your-username>/VectorAI.git
-cd VectorAI
-```
-
----
-
-## 2️⃣ Backend Setup
-
-### Install Dependencies:
-
-```bash
-pip install -r requirements.txt
-```
-
-### Create `.env` file:
-
-```
-AWS_ACCESS_KEY_ID=[your key]
-AWS_SECRET_ACCESS_KEY=[your secret]
-AWS_REGION=eu-west-1
-S3_BUCKET=vectorai-storage
-```
-
-> ⚠️ **Never commit this file.**
-> `.env` must always be in `.gitignore`.
-
-### Run the Backend:
-
-```bash
-uvicorn main:app --reload
-```
+1. Image is uploaded through the frontend
+2. Backend processes the image
+3. Encoder compresses the image into a latent vector
+4. Decoder reconstructs the image
+5. Output is returned and displayed
 
 ---
 
-## 3️⃣ Frontend Setup
+## 📊 Experiments (Planned / In Progress)
 
-```bash
-cd frontend
-npm install
-npm run dev
-```
+- Effect of latent size on image quality
+- Compression ratio vs reconstruction accuracy
+- Visualising latent space
 
 ---
 
-# 🤖 AI Processing Pipeline (Rekognition)
+## 🖼️ Results
 
-VectorAI performs:
+(will be added here later)
 
-### 1. **Image Labels**
-
-Detects objects, scenes, and activities.
-
-### 2. **OCR / Text Detection**
-
-Recognizes printed or handwritten text.
-
-### 3. **Moderation / Unsafe Content**
-
-Flags inappropriate images.
-
-### 4. **Future Vision Transformers**
-
-Advanced deep-learning analysis.
+- Original image
+- Reconstructed image
+- Comparison at different compression levels
 
 ---
 
-# 📬 Example API Workflow
+## 🛠️ Tech Stack
 
-### Step 1 — Get a Presigned URL
-
-```http
-POST /upload-url
-```
-
-### Step 2 — Upload Image to S3
-
-Frontend uploads directly.
-
-### Step 3 — Analyze Image
-
-```http
-POST /analyze
-{
-  "s3_key": "uploads/2025-01-01-image.png"
-}
-```
-
-### Example Response:
-
-```json
-{
-  "labels": [...],
-  "text": "...",
-  "unsafe": false,
-  "metadata": {
-      "width": 1080,
-      "height": 720
-  }
-}
-```
+- Frontend: React (TypeScript)
+- Backend: (your backend here – e.g. Spring Boot / Python)
+- Machine Learning: TensorFlow / PyTorch (TBD)
 
 ---
 
-# 🐳 Docker Support
+## 🎯 Goals
 
-### Build + Run Backend
-
-```bash
-docker build -t vectorai-backend .
-docker run -p 8000:8000 vectorai-backend
-```
+- Understand how machine learning models learn compressed representations
+- Explore the relationship between compression and intelligence
+- Build an end-to-end system integrating ML with a full-stack application
 
 ---
 
-# ☁️ Deployment Options
+## 📌 Future Improvements
 
-* **AWS ECS (best for scaling)**
-* **AWS EC2** (simple + cheap)
-* **Docker Compose** (local or VPS)
-* **Elastic Beanstalk** (managed)
-
-Production checklists included:
-
-* Use IAM roles instead of access keys
-* Enable S3 bucket policies
-* Add CloudWatch logs
-* Use HTTPS on frontend
+- Support for larger and more complex images
+- Real-time compression preview
+- Integration with cloud services for deployment
+- Advanced models (e.g. Variational Autoencoders)
 
 ---
 
-# 📌 Roadmap
+## 🤝 Motivation
 
-* [ ] Add Vision Transformer pipeline
-* [ ] Add PDF analysis
-* [ ] User accounts + saved reports
-* [ ] Real-time processing queue (SQS + Lambda)
-* [ ] Full DevOps deployment (CI/CD + ECS)
+This project was built to gain a deeper understanding of how AI models learn patterns in data and how those patterns can be used for efficient representation and compression.
 
 ---
 
-# 🧑‍💻 Author
+## 📎 Author
 
-**Mahmoud Alimi**
-BA Computer Science @ Maynooth University
-DevOps | Cloud | AI | Ethical Hacking
-2nd Place — Google Ireland Hackathon 2025
-
----
-
-# ⭐ Contribute
-
-Feel free to open issues or PRs. Pull requests for new pipelines are welcome!
-
----
-
-# 📄 License
-
-MIT License — free to use and modify.
+- Mahmoud Olamide Alimi 
