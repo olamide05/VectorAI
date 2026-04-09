@@ -67,7 +67,7 @@ Instead of storing raw image data, VectorAI learns how to represent images as co
 ## 🛠️ Tech Stack
 
 - Frontend: React (TypeScript)
-- Backend: (your backend here – e.g. Spring Boot / Python)
+- Backend: (Python)
 - Machine Learning: TensorFlow / PyTorch (TBD)
 
 ---
