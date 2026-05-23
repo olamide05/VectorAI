@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from tensorflow.keras.datasets import mnist
-from model import build_autoencoder
+from src.model import build_autoencoder
 # from tensorflow.keras.models import Model
 
 # 1. Load data
