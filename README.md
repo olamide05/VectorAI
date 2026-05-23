@@ -1,100 +1,218 @@
 # VectorAI
 
-## 🚀 Overview
+## Overview
 
-VectorAI is a machine learning project that explores how data can be compressed into meaningful representations using neural networks.
+VectorAI is an experimental machine learning system focused on neural data compression using autoencoders.
 
-The system uses an autoencoder to compress images into a low-dimensional vector (latent space) and reconstruct them. This demonstrates the connection between machine learning, representation learning, and data compression.
+The project explores how neural networks can learn compact latent representations of images while preserving important visual information for reconstruction.
 
----
+Rather than storing raw pixel data directly, VectorAI compresses images into low-dimensional vectors inside a learned latent space.
 
-## 🧠 Key Idea
-
-Instead of storing raw image data, VectorAI learns how to represent images as compact vectors while preserving important features.
-
-> Better compression = better understanding of the data
-
----
-
-## ⚙️ Features
-
-- Upload an image
-- Encode image into a latent vector
-- Reconstruct the image from the compressed representation
-- Compare original vs reconstructed output
-- Experiment with different compression levels
+This project combines:
+- Deep Learning
+- Representation Learning
+- Data Compression
+- Visualization
+- Full-stack integration
 
 ---
 
-## 🧩 Concepts Covered
+# Core Idea
 
-- Autoencoders
-- Latent space representations
-- Lossy compression
-- Reconstruction loss (MSE)
-- Neural networks
+Traditional image compression uses handcrafted algorithms.
 
----
+VectorAI instead learns compression automatically using neural networks.
 
-## 🏗️ How It Works
+The encoder transforms high-dimensional image data into compact latent vectors:
 
-1. Image is uploaded through the frontend
-2. Backend processes the image
-3. Encoder compresses the image into a latent vector
-4. Decoder reconstructs the image
-5. Output is returned and displayed
+```text
+784 dimensions → 128 → 32 → 2 dimensions
+```
+
+The decoder reconstructs the image from this compressed representation.
+
+This demonstrates how machine learning models learn meaningful internal representations of data.
 
 ---
 
-## 📊 Experiments (Planned / In Progress)
+# Architecture
 
-- Effect of latent size on image quality
-- Compression ratio vs reconstruction accuracy
-- Visualising latent space
+```text
+Input Image (28x28)
+        ↓
+Flatten (784)
+        ↓
+Encoder Network
+784 → 128 → 32 → 2
+        ↓
+Latent Space
+        ↓
+Decoder Network
+2 → 32 → 128 → 784
+        ↓
+Reconstructed Image
+```
 
 ---
 
-## 🖼️ Results
+# Features
 
-(will be added here later)
+- Autoencoder-based image compression
+- Latent space visualization
+- Image reconstruction
+- Denoising autoencoder experiments
+- Compression quality analysis
+- Reconstruction loss tracking
+- MNIST dataset integration
+
+---
+
+# Current Experiments
+
+## Basic Autoencoder
+
+The model learns compressed representations of handwritten digits.
+
+### Reconstruction Example
 
 - Original image
-- Reconstructed image
-- Comparison at different compression levels
+- Compressed latent representation
+- Reconstructed output
 
 ---
 
-## 🛠️ Tech Stack
+## Latent Space Visualization
 
-- Frontend: React (TypeScript)
-- Backend: (Python)
-- Machine Learning: TensorFlow / PyTorch (TBD)
+The encoder maps visually similar digits close together inside latent space.
 
----
-
-## 🎯 Goals
-
-- Understand how machine learning models learn compressed representations
-- Explore the relationship between compression and intelligence
-- Build an end-to-end system integrating ML with a full-stack application
+This allows:
+- clustering analysis
+- representation learning
+- dimensionality reduction
 
 ---
 
-## 📌 Future Improvements
+## Denoising Autoencoder
 
-- Support for larger and more complex images
-- Real-time compression preview
-- Integration with cloud services for deployment
-- Advanced models (e.g. Variational Autoencoders)
+Noise is added to images before compression.
 
----
+The model learns to:
+- remove noise
+- preserve structure
+- reconstruct cleaner outputs
 
-## 🤝 Motivation
-
-This project was built to gain a deeper understanding of how AI models learn patterns in data and how those patterns can be used for efficient representation and compression.
+This demonstrates robustness in learned representations.
 
 ---
 
-## 📎 Author
+# Concepts Explored
 
-- Mahmoud Olamide Alimi 
+- Autoencoders
+- Latent Space
+- Representation Learning
+- Neural Compression
+- Reconstruction Loss
+- Denoising
+- Dimensionality Reduction
+- Feature Extraction
+
+---
+
+# Tech Stack
+
+## Machine Learning
+- TensorFlow / Keras
+- NumPy
+- Matplotlib
+
+## Frontend
+- React
+- TypeScript
+- Next.js
+
+## Backend
+- Python
+
+---
+
+# Project Structure
+
+```text
+VectorAI/
+│
+├── backend/
+├── frontend/
+├── ml/
+│   ├── src/
+│   │   ├── model.py
+│   │   ├── train.py
+│   │   └── utils.py
+│   │
+│   ├── saved_models/
+│   └── notebooks/
+│
+├── docs/
+├── README.md
+└── .gitignore
+```
+
+---
+
+# Running the ML Pipeline
+
+## Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+## Run training
+
+```bash
+python train.py
+```
+
+---
+
+# Results
+
+## Reconstruction Quality
+
+The model successfully reconstructs compressed MNIST digits using only a 2-dimensional latent representation.
+
+### Observations
+
+- Larger latent dimensions improve reconstruction quality
+- Smaller latent dimensions improve compression ratio
+- Similar digits cluster together in latent space
+
+---
+
+# Goals
+
+- Understand learned data representations
+- Explore neural compression systems
+- Build production-style ML pipelines
+- Integrate ML systems into full-stack applications
+- Experiment with advanced generative architectures
+
+---
+
+# Future Improvements
+
+- Variational Autoencoders (VAE)
+- Convolutional Autoencoders
+- Real image datasets
+- Model checkpointing
+- Web deployment
+- Interactive latent space explorer
+- Cloud inference APIs
+- GPU optimization
+
+---
+
+# Author
+
+Mahmoud Olamide Alimi
+
+Software Engineering & AI Engineering
