@@ -1,4 +1,22 @@
-venv/
+# Python
 __pycache__/
 *.pyc
-models/
+venv/
+.env
+
+# ML
+ml/saved_models/
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Uploads
+backend/uploads/
+
+# Logs
+*.log
