@@ -20,3 +20,7 @@ backend/uploads/
 
 # Logs
 *.log
+
+backend/Lib/
+backend/Scripts/
+backend/pyvenv.cfg
